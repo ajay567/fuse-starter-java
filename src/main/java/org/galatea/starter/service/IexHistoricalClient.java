@@ -21,7 +21,7 @@ public interface IexHistoricalClient {
    * @param date the particular date to get historical prices for.
    * @return a list of the historical price for each of the symbols passed in.
    */
-  @GetMapping("/stock/{symbol}/chart/{range}/{date}?token=${spring.rest.iexApiToken}")
+  @GetMapping("/stock/{symbol}/chart/{range}/{date}?token=${iexApiToken}")
   List<IexHistoricalPrices> getHistoricalPricesForSymbols(
       @PathVariable(value = "symbol") String symbols, @PathVariable(value = "range") String range,
       @PathVariable(value = "date", required = false) String date);
