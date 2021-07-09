@@ -62,23 +62,35 @@ public class IexRestController {
   @GetMapping(value = "${mvc.iex.getHistoricalPricesPath}", produces = {
       MediaType.APPLICATION_JSON_VALUE})
   public List<IexHistoricalPrices> getHistoricalPrices(
-      @RequestParam(value = "symbol") final String symbols, @RequestParam(value = "range",
-      required = false) final String range, @RequestParam(value = "date", required = false)
-      final String date) {
+      @RequestParam(value = "symbol") final String symbols,
+      @RequestParam(value = "range", required = false) final String range,
+      @RequestParam(value = "date", required = false) final String date) {
 
-    if (symbols == null || symbols.length() == 0) {
+    if (queryNullLengthCheck(symbols)) {
       return Collections.emptyList();
     }
 
-    if (date == null || date.length() == 0) {
-      if (range == null || range.length() == 0) {
+    if (queryNullLengthCheck(date)) {
+      if (queryNullLengthCheck(range)) {
         return iexService.getHistoricalPricesForSymbols(symbols);
       } else {
         return iexService.getHistoricalPricesForSymbols(symbols, range);
       }
     } else {
-      return iexService.getHistoricalPricesForSymbols(symbols,range,date);
+      return iexService.getHistoricalPricesForSymbols(symbols, range, date);
     }
+  }
+
+  /**
+   * Utility method for getHistoricalPrices that helps null and length
+   * checks
+   *
+   * @param query a string on which the check will be performed
+   * @return boolean value based on the checked result
+   */
+  private boolean queryNullLengthCheck(String query){
+
+    return query == null || query.length() == 0;
   }
 
 }

@@ -7,8 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 /**
- * A Feign Declarative REST Client to access endpoints from the IEX API to get historical
- * prices.
+ * A Feign Declarative REST Client to access endpoints from the IEX API to get historical prices.
  */
 @FeignClient(name = "IEX", url = "${spring.rest.iexCloudPath}")
 public interface IexHistoricalClient {
@@ -23,7 +22,8 @@ public interface IexHistoricalClient {
    */
   @GetMapping("/stock/{symbol}/chart/{range}/{date}?token=${spring.rest.iexApiToken}")
   List<IexHistoricalPrices> getHistoricalPricesForSymbols(
-      @PathVariable(value = "symbol") String symbols, @PathVariable(value = "range") String range,
+      @PathVariable(value = "symbol") String symbols,
+      @PathVariable(value = "range") String range,
       @PathVariable(value = "date") String date);
 
 
@@ -36,7 +36,8 @@ public interface IexHistoricalClient {
    */
   @GetMapping("/stock/{symbol}/chart/{range}?token=${spring.rest.iexApiToken}")
   List<IexHistoricalPrices> getHistoricalPricesForSymbols(
-      @PathVariable(value = "symbol") String symbols, @PathVariable(value = "range") String range);
+      @PathVariable(value = "symbol") String symbols,
+      @PathVariable(value = "range") String range);
 
   /**
    * Get the historical prices for a stock symbol passed in.
