@@ -19,6 +19,7 @@ import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 
 @RequiredArgsConstructor
@@ -76,8 +77,6 @@ public class IexRestControllerTest extends ASpringTest {
     MvcResult result = this.mvc.perform(
         org.springframework.test.web.servlet.request.MockMvcRequestBuilders
             .get("/iex/historicalPrices?symbol=AAPL&range=1m&date=20210627")
-            // This URL will be hit by the MockMvc client. The result is configured in the file
-            // src/test/resources/wiremock/mappings/mapping-lastTradedPrice.json
             .accept(MediaType.APPLICATION_JSON_VALUE))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$[0].close").value(new BigDecimal("116.59")))
@@ -89,6 +88,54 @@ public class IexRestControllerTest extends ASpringTest {
         .andExpect(jsonPath("$[0].date", is("2021-06-27")))
         .andReturn();
   }
+
+  @Test
+  public void testGetHistoricalPriceNoDate() throws Exception {
+
+    MvcResult result = this.mvc.perform(
+        org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+            .get("/iex/historicalPrices?symbol=IBM&range=1m&date=")
+            .accept(MediaType.APPLICATION_JSON_VALUE))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[0].close").value(new BigDecimal("116.59")))
+        .andExpect(jsonPath("$[0].high").value(new BigDecimal("117.49")))
+        .andExpect(jsonPath("$[0].low").value(new BigDecimal("116.22")))
+        .andExpect(jsonPath("$[0].open").value(new BigDecimal("116.57")))
+        .andExpect(jsonPath("$[0].symbol", is("IBM")))
+        .andExpect(jsonPath("$[0].volume").value(new BigDecimal("46691331")))
+        .andExpect(jsonPath("$[0].date", is("2021-06-27")))
+        .andReturn();
+  }
+
+  @Test
+  public void testGetHistoricalPriceNoRangeNoDate() throws Exception {
+
+    MvcResult result = this.mvc.perform(
+        org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+            .get("/iex/historicalPrices?symbol=MSFT&range=&date=")
+            .accept(MediaType.APPLICATION_JSON_VALUE))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[0].close").value(new BigDecimal("116.59")))
+        .andExpect(jsonPath("$[0].high").value(new BigDecimal("117.49")))
+        .andExpect(jsonPath("$[0].low").value(new BigDecimal("116.22")))
+        .andExpect(jsonPath("$[0].open").value(new BigDecimal("116.57")))
+        .andExpect(jsonPath("$[0].symbol", is("MSFT")))
+        .andExpect(jsonPath("$[0].volume").value(new BigDecimal("46691331")))
+        .andExpect(jsonPath("$[0].date", is("2021-06-27")))
+        .andReturn();
+  }
+
+  @Test
+  public void testGetHistoricalPriceNoSymbol() throws Exception {
+
+    MvcResult result = this.mvc.perform(
+        org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+            .get("/iex/historicalPrices")
+            .accept(MediaType.APPLICATION_JSON_VALUE))
+        .andExpect(status().isBadRequest())
+        .andReturn();
+  }
+
 
   @Test
   public void testGetLastTradedPriceEmpty() throws Exception {

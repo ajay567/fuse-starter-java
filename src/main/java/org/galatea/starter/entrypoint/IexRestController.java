@@ -1,5 +1,6 @@
 package org.galatea.starter.entrypoint;
 
+import java.util.Collections;
 import java.util.List;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -61,9 +62,23 @@ public class IexRestController {
   @GetMapping(value = "${mvc.iex.getHistoricalPricesPath}", produces = {
       MediaType.APPLICATION_JSON_VALUE})
   public List<IexHistoricalPrices> getHistoricalPrices(
-      @RequestParam(value = "symbol") final String symbols, @RequestParam("range")
-      final String range, @RequestParam(value = "date", required = false) final String date) {
-    return iexService.getHistoricalPricesForSymbols(symbols,range,date);
+      @RequestParam(value = "symbol") final String symbols, @RequestParam(value = "range",
+      required = false) final String range, @RequestParam(value = "date", required = false)
+      final String date) {
+
+    if (symbols == null || symbols.length() == 0) {
+      return Collections.emptyList();
+    }
+
+    if (date == null || date.length() == 0) {
+      if (range == null || range.length() == 0) {
+        return iexService.getHistoricalPricesForSymbols(symbols);
+      } else {
+        return iexService.getHistoricalPricesForSymbols(symbols, range);
+      }
+    } else {
+      return iexService.getHistoricalPricesForSymbols(symbols,range,date);
+    }
   }
 
 }
