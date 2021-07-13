@@ -14,6 +14,8 @@ public class IexHistoricalPrices {
   private BigDecimal open;
   private String symbol;
   private BigDecimal volume;
+
   private String date;
+  private String minute;
 
 }

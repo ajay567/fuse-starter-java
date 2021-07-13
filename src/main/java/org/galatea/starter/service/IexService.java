@@ -1,10 +1,16 @@
 package org.galatea.starter.service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.galatea.starter.domain.HistoricalPricesDB;
+import org.galatea.starter.domain.HistoricalPricesId;
 import org.galatea.starter.domain.IexHistoricalPrices;
 import org.galatea.starter.domain.IexLastTradedPrice;
 import org.galatea.starter.domain.IexSymbol;
@@ -18,6 +24,9 @@ import org.springframework.util.CollectionUtils;
 @Service
 @RequiredArgsConstructor
 public class IexService {
+
+  @NonNull
+  private HistoricalPricesService historicalPricesService;
 
   @NonNull
   private IexClient iexClient;
@@ -59,7 +68,63 @@ public class IexService {
   public List<IexHistoricalPrices> getHistoricalPricesForSymbols(final String symbols,
       final String range, final String date) {
 
-    return iexHistoricalClient.getHistoricalPricesForSymbols(symbols, range, date);
+    Optional<HistoricalPricesDB>  listHistoricalPricesDB =  null;
+
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+
+    try {
+      LocalDate dateConverted = LocalDate.parse(date, formatter);
+      String dateFormatted = date.substring(0,4) + "-" + date.substring(4,6) +
+          "-" + date.substring(6,8);
+      if ((listHistoricalPricesDB =  historicalPricesService.getPrices
+          (new HistoricalPricesId(symbols, dateFormatted,"10:50"))).isPresent() ){
+
+        HistoricalPricesDB objHistoricalPricesDB = listHistoricalPricesDB.get();
+
+        List<IexHistoricalPrices> listIexHistoricalPrices = new ArrayList();
+
+        IexHistoricalPrices ObjIexHistoricalPrices  = IexHistoricalPrices.builder().build();
+        ObjIexHistoricalPrices.setClose(objHistoricalPricesDB.getClose());
+        ObjIexHistoricalPrices.setDate(objHistoricalPricesDB.getDate());
+        ObjIexHistoricalPrices.setHigh(objHistoricalPricesDB.getHigh());
+        ObjIexHistoricalPrices.setLow(objHistoricalPricesDB.getLow());
+        ObjIexHistoricalPrices.setSymbol(objHistoricalPricesDB.getSymbol());
+        ObjIexHistoricalPrices.setOpen(objHistoricalPricesDB.getOpen());
+        ObjIexHistoricalPrices.setVolume(objHistoricalPricesDB.getVolume());
+        ObjIexHistoricalPrices.setMinute(objHistoricalPricesDB.getMinute());
+
+        listIexHistoricalPrices.add(ObjIexHistoricalPrices);
+
+
+        return listIexHistoricalPrices;
+      }
+      else {
+
+        List<IexHistoricalPrices> listIexHistoricalPrices =
+            iexHistoricalClient.getHistoricalPricesForSymbols(symbols, range, date);
+
+        //Put this in the database
+        for (IexHistoricalPrices iexHistoricalPrices: listIexHistoricalPrices) {
+
+          HistoricalPricesDB historicalPricesDB = new HistoricalPricesDB
+              (symbols, iexHistoricalPrices.getDate(),
+                  iexHistoricalPrices.getClose(), iexHistoricalPrices.getHigh(),
+                  iexHistoricalPrices.getLow(), iexHistoricalPrices.getOpen(),
+                  iexHistoricalPrices.getVolume(),iexHistoricalPrices.getMinute());
+
+          historicalPricesService.save(historicalPricesDB);
+
+        }
+
+
+        return listIexHistoricalPrices;
+      }
+
+    }
+    catch (Exception ParseException){
+      System.out.println("Date Not Formatted properly.");
+      return  null;
+    }
 
   }
 
