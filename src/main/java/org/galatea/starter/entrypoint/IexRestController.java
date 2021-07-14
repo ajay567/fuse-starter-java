@@ -1,5 +1,6 @@
 package org.galatea.starter.entrypoint;
 
+import java.util.Collections;
 import java.util.List;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -61,9 +62,35 @@ public class IexRestController {
   @GetMapping(value = "${mvc.iex.getHistoricalPricesPath}", produces = {
       MediaType.APPLICATION_JSON_VALUE})
   public List<IexHistoricalPrices> getHistoricalPrices(
-      @RequestParam(value = "symbol") final String symbols, @RequestParam("range")
-      final String range, @RequestParam(value = "date", required = false) final String date) {
-    return iexService.getHistoricalPricesForSymbols(symbols,range,date);
+      @RequestParam(value = "symbol") final String symbols,
+      @RequestParam(value = "range", required = false) final String range,
+      @RequestParam(value = "date", required = false) final String date) {
+
+    if (queryNullLengthCheck(symbols)) {
+      return Collections.emptyList();
+    }
+
+    if (queryNullLengthCheck(date)) {
+      if (queryNullLengthCheck(range)) {
+        return iexService.getHistoricalPricesForSymbols(symbols);
+      } else {
+        return iexService.getHistoricalPricesForSymbols(symbols, range);
+      }
+    } else {
+      return iexService.getHistoricalPricesForSymbols(symbols, range, date);
+    }
+  }
+
+  /**
+   * Utility method for getHistoricalPrices that helps null and length
+   * checks
+   *
+   * @param query a string on which the check will be performed
+   * @return boolean value based on the checked result
+   */
+  private boolean queryNullLengthCheck(String query){
+
+    return query == null || query.length() == 0;
   }
 
 }

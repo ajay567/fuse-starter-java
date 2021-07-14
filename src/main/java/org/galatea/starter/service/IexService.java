@@ -49,19 +49,44 @@ public class IexService {
     }
   }
 
-
   /**
    * Get the historical prices for each Symbol, range and date that is passed in.
    *
    * @param symbols the list of symbols to get a historical prices for.
    * @param range the range (day, month, year) to get a historical prices for.
-   * @param date the particular date to get historical prices for.
    * @return a list of historical price objects for each Symbol that is passed in.
    */
   public List<IexHistoricalPrices> getHistoricalPricesForSymbols(final String symbols,
       final String range, final String date) {
 
     return iexHistoricalClient.getHistoricalPricesForSymbols(symbols, range, date);
+
+  }
+
+
+  /**
+   * Get the historical prices for a Symbol and range that is passed in.
+   *
+   * @param symbols the list of symbols to get a historical prices for.
+   * @param range the range (day, month, year) to get a historical prices for.
+   * @return a list of historical price objects for each Symbol that is passed in.
+   */
+  public List<IexHistoricalPrices> getHistoricalPricesForSymbols(final String symbols,
+      final String range) {
+
+    return iexHistoricalClient.getHistoricalPricesForSymbols(symbols, range);
+
+  }
+
+  /**
+   * Get the historical prices for a Symbol that is passed in.
+   *
+   * @param symbols the list of symbols to get a historical prices for.
+   * @return a list of historical price objects for each Symbol that is passed in.
+   */
+  public List<IexHistoricalPrices> getHistoricalPricesForSymbols(final String symbols) {
+
+    return iexHistoricalClient.getHistoricalPricesForSymbols(symbols);
 
   }
 

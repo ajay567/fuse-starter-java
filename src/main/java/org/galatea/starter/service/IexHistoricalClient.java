@@ -7,15 +7,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 /**
- * A Feign Declarative REST Client to access endpoints from the Free and Open IEX API to get market
- * data. See https://iextrading.com/developer/docs/
+ * A Feign Declarative REST Client to access endpoints from the IEX API to get historical prices.
  */
-@FeignClient(name = "IEXHIST", url = "${spring.rest.iexCloudPath}")
+@FeignClient(name = "IEX", url = "${spring.rest.iexCloudPath}")
 public interface IexHistoricalClient {
 
   /**
-   * Get the historical prices for each stock symbol passed in. See https://iextrading.com/developer/docs/#last.
-   * http://localhost:8080/iex/historicalPrices?symbol=MSFT&range=1m&date=
+   * Get the historical prices for a stock symbol passed in.
+   *
    * @param symbols the list of symbols to get a historical prices for.
    * @param range the range (day, month, year) to get a historical prices for.
    * @param date the particular date to get historical prices for.
@@ -23,6 +22,32 @@ public interface IexHistoricalClient {
    */
   @GetMapping("/stock/{symbol}/chart/{range}/{date}?token=${spring.rest.iexApiToken}")
   List<IexHistoricalPrices> getHistoricalPricesForSymbols(
-      @PathVariable(value = "symbol") String symbols, @PathVariable(value = "range") String range,
-      @PathVariable(value = "date", required = false) String date);
+      @PathVariable(value = "symbol") String symbols,
+      @PathVariable(value = "range") String range,
+      @PathVariable(value = "date") String date);
+
+
+  /**
+   * Get the historical prices for a stock symbol passed in.
+   *
+   * @param symbols the list of symbols to get a historical prices for.
+   * @param range the range (day, month, year) to get a historical prices for.
+   * @return a list of the historical price for each of the symbols passed in.
+   */
+  @GetMapping("/stock/{symbol}/chart/{range}?token=${spring.rest.iexApiToken}")
+  List<IexHistoricalPrices> getHistoricalPricesForSymbols(
+      @PathVariable(value = "symbol") String symbols,
+      @PathVariable(value = "range") String range);
+
+  /**
+   * Get the historical prices for a stock symbol passed in.
+   *
+   * @param symbols the list of symbols to get a historical prices for.
+   * @return a list of the historical price for each of the symbols passed in.
+   */
+  @GetMapping("/stock/{symbol}/chart?token=${spring.rest.iexApiToken}")
+  List<IexHistoricalPrices> getHistoricalPricesForSymbols(
+      @PathVariable(value = "symbol") String symbols);
 }
+
+
