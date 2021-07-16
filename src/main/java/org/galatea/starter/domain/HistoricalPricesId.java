@@ -1,7 +1,6 @@
 package org.galatea.starter.domain;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 
 public class HistoricalPricesId implements Serializable {
 
@@ -17,6 +16,7 @@ public class HistoricalPricesId implements Serializable {
   public HistoricalPricesId() {
     //Does Nothing
   }
+
 
   /**
    * Constructor that initializes all field variables.

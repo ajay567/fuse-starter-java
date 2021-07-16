@@ -14,28 +14,34 @@ public class HistoricalPricesService {
   HistoricalPricesDbRepo historicalpricesDbRepo;
 
   /**
+   * Get a particular HistoricalPricesDB entity from the database if id matches.
    *
-   * @param obj
-   * @return
+   * @param historicalPricesId the id for the entity to be returned
+   * @return HistoricalPricesDB objects
    */
-  public Optional<HistoricalPricesDB> getPrices(HistoricalPricesId obj) {
-    return historicalpricesDbRepo.findById(obj);
+  public Optional<HistoricalPricesDB> getHistoricalPriceFromDb(final HistoricalPricesId
+      historicalPricesId) {
+    return historicalpricesDbRepo.findById(historicalPricesId);
   }
 
   /**
+   * Saves a HistoricalPricesDB entity into the database.
    *
-   * @param historicalPricesDB
+   * @param historicalPricesDB the entity to be saved
    */
-  public void save(HistoricalPricesDB historicalPricesDB) {
+  public void saveOrUpdate(final HistoricalPricesDB historicalPricesDB) {
     historicalpricesDbRepo.save(historicalPricesDB);
   }
 
   /**
+   * Checks if a HistoricalPricesDB entity exists in the database based on the
+   * HistoricalPricesId.
    *
-   * @param historicalPricesId
-   * @return
+   * @param historicalPricesId the id to searched in the database
+   * @return true or false based on existence
    */
-  public boolean exists(HistoricalPricesId historicalPricesId) {
+  public boolean exists(final HistoricalPricesId historicalPricesId) {
+
     return historicalpricesDbRepo.existsById(historicalPricesId);
   }
 
