@@ -1,6 +1,8 @@
 package org.galatea.starter.testutils;
 
+import java.math.BigDecimal;
 import lombok.extern.slf4j.Slf4j;
+import org.galatea.starter.domain.HistoricalPricesDB;
 import org.galatea.starter.domain.SettlementMission;
 import org.galatea.starter.domain.TradeAgreement;
 import org.galatea.starter.entrypoint.messagecontracts.ProtobufMessages;
@@ -57,5 +59,19 @@ public class TestDataGenerator {
         .direction("REC")
         .qty(100d)
         .version(0L);
+  }
+
+  /**
+   * HistoricalPricesDB with some default test values.
+   */
+  public static HistoricalPricesDB historicalPriceData() {
+    return new HistoricalPricesDB("MSFT",
+        "21072021",
+        new BigDecimal(116.59),
+        new BigDecimal(117.49),
+        new BigDecimal(116.22),
+        new BigDecimal(116.57),
+        new BigDecimal(46691331),
+        "10:08");
   }
 }

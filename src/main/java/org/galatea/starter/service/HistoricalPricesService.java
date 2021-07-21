@@ -1,16 +1,18 @@
 package org.galatea.starter.service;
 
 import java.util.Optional;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.galatea.starter.domain.HistoricalPricesDB;
 import org.galatea.starter.domain.HistoricalPricesId;
 import org.galatea.starter.domain.rpsy.HistoricalPricesDbRepo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class HistoricalPricesService {
 
-  @Autowired
+  @NonNull
   HistoricalPricesDbRepo historicalpricesDbRepo;
 
   /**
@@ -29,8 +31,10 @@ public class HistoricalPricesService {
    *
    * @param historicalPricesDB the entity to be saved
    */
-  public void saveOrUpdate(final HistoricalPricesDB historicalPricesDB) {
+  public HistoricalPricesDB saveOrUpdate(final HistoricalPricesDB historicalPricesDB) {
     historicalpricesDbRepo.save(historicalPricesDB);
+
+    return historicalPricesDB;
   }
 
   /**
