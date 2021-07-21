@@ -73,7 +73,7 @@ public class IexService {
 
     String dateFormatted = stringDateFormatter(date);
 
-    if (dateFormatted == null){
+    if (dateFormatted == null) {
       return Collections.emptyList();
     }
 
@@ -232,13 +232,12 @@ public class IexService {
    * @param date value to be formatted
    * @return correctly formatted date as string
    */
-  private String stringDateFormatter(String date){
+  private String stringDateFormatter(final String date) {
 
     try {
       return (new SimpleDateFormat("yyyy-MM-dd"))
           .format(new SimpleDateFormat("yyyyMMdd").parse(date));
-    }
-    catch (Exception ParseException) {
+    } catch (Exception parseException) {
       System.out.println("The provided date has the wrong format.");
       return null;
     }
@@ -276,11 +275,11 @@ public class IexService {
   /**
    * Get information from database for existing api requests for range.
    *
-   * @param startDate
-   * @param endDate
-   * @param symbols
-   * @param listIexHistoricalPrices
-   * @param missingDates
+   * @param startDate the date to start the loop at
+   * @param endDate the date to end the loop at
+   * @param symbols the symbol for which data has to be retrieved
+   * @param listIexHistoricalPrices list for IexHistoricalPrices
+   * @param missingDates list for missing dates not present in the database
    */
   private void retrieveInformationFromDatabaseForRange(final LocalDate startDate,
       final LocalDate endDate, final String symbols, final String timeForMinuteWhenQueryIsRange,
@@ -309,7 +308,7 @@ public class IexService {
    * Get HistoricalPrice from the database and add it to the list.
    *
    * @param historicalPriceId object to searched in the database
-   * @param listIexHistoricalPrices list where object is to be added
+   * @param listIexHistoricalPrices list for IexHistoricalPrices
    */
   private void getIexHistoricalPricesObjectFromDatabase(
       final HistoricalPriceId historicalPriceId,
