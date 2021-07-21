@@ -7,9 +7,9 @@ import static org.mockito.BDDMockito.given;
 
 import java.util.Optional;
 import org.galatea.starter.ASpringTest;
-import org.galatea.starter.domain.HistoricalPricesDB;
-import org.galatea.starter.domain.HistoricalPricesId;
-import org.galatea.starter.domain.rpsy.HistoricalPricesDbRepo;
+import org.galatea.starter.domain.HistoricalPrice;
+import org.galatea.starter.domain.HistoricalPriceId;
+import org.galatea.starter.domain.rpsy.HistoricalPriceDbRepo;
 import org.galatea.starter.testutils.TestDataGenerator;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,13 +18,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 public class HistoricalPricesServiceTest extends ASpringTest {
 
   @MockBean
-  private HistoricalPricesDbRepo historicalPricesDbRepo;
+  private HistoricalPriceDbRepo historicalPriceDbRepo;
 
   private HistoricalPricesService historicalPricesService;
 
   @Before
   public void setup() {
-    historicalPricesService = new HistoricalPricesService(historicalPricesDbRepo);
+    historicalPricesService = new HistoricalPricesService(historicalPriceDbRepo);
   }
 
 
@@ -34,14 +34,14 @@ public class HistoricalPricesServiceTest extends ASpringTest {
     String date = "21072021";
     String minute = "10:08";
 
-    HistoricalPricesDB historicalPricesDB = TestDataGenerator.historicalPriceData();
-    HistoricalPricesId historicalPricesId = new HistoricalPricesId(symbol, date, minute);
+    HistoricalPrice historicalPrice = TestDataGenerator.historicalPriceData();
+    HistoricalPriceId historicalPriceId = new HistoricalPriceId(symbol, date, minute);
 
-    given(this.historicalPricesDbRepo.findById(historicalPricesId)).
-        willReturn(Optional.of(historicalPricesDB));
+    given(this.historicalPriceDbRepo.findById(historicalPriceId)).
+        willReturn(Optional.of(historicalPrice));
 
-    Optional<HistoricalPricesDB> historicalPricesDbObject =
-        historicalPricesService.getHistoricalPriceFromDb(historicalPricesId);
+    Optional<HistoricalPrice> historicalPricesDbObject =
+        historicalPricesService.getHistoricalPriceFromDb(historicalPriceId);
 
     assertTrue(historicalPricesDbObject.isPresent());
   }
@@ -53,14 +53,14 @@ public class HistoricalPricesServiceTest extends ASpringTest {
     String date = "21072021";
     String minute = "10:08";
 
-    HistoricalPricesDB historicalPricesDB = TestDataGenerator.historicalPriceData();
-    HistoricalPricesId historicalPricesId = new HistoricalPricesId(symbol, date, minute);
+    HistoricalPrice historicalPrice = TestDataGenerator.historicalPriceData();
+    HistoricalPriceId historicalPriceId = new HistoricalPriceId(symbol, date, minute);
 
-    given(this.historicalPricesDbRepo.findById(historicalPricesId)).
-        willReturn(Optional.of(historicalPricesDB));
+    given(this.historicalPriceDbRepo.findById(historicalPriceId)).
+        willReturn(Optional.of(historicalPrice));
 
-    Optional<HistoricalPricesDB> historicalPricesDbObject =
-        historicalPricesService.getHistoricalPriceFromDb(new HistoricalPricesId("MSFT",
+    Optional<HistoricalPrice> historicalPricesDbObject =
+        historicalPricesService.getHistoricalPriceFromDb(new HistoricalPriceId("MSFT",
             "1",
             "2"));
 
@@ -70,11 +70,11 @@ public class HistoricalPricesServiceTest extends ASpringTest {
 
   @Test
   public void testSaveOrUpdate() {
-    HistoricalPricesDB historicalPricesDB = TestDataGenerator.historicalPriceData();
+    HistoricalPrice historicalPrice = TestDataGenerator.historicalPriceData();
 
-    given(this.historicalPricesDbRepo.save(historicalPricesDB)).willReturn(historicalPricesDB);
+    given(this.historicalPriceDbRepo.save(historicalPrice)).willReturn(historicalPrice);
 
-    assertNotNull(historicalPricesService.saveOrUpdate(historicalPricesDB));
+    assertNotNull(historicalPricesService.saveOrUpdate(historicalPrice));
   }
 
 
@@ -84,11 +84,11 @@ public class HistoricalPricesServiceTest extends ASpringTest {
     String date = "21072021";
     String minute = "10:08";
 
-    HistoricalPricesId historicalPricesId = new HistoricalPricesId(symbol, date, minute);
+    HistoricalPriceId historicalPriceId = new HistoricalPriceId(symbol, date, minute);
 
-    given(this.historicalPricesDbRepo.existsById(historicalPricesId)).willReturn(true);
+    given(this.historicalPriceDbRepo.existsById(historicalPriceId)).willReturn(true);
 
-    assertTrue(historicalPricesService.exists(historicalPricesId));
+    assertTrue(historicalPricesService.exists(historicalPriceId));
   }
 
 
@@ -98,11 +98,11 @@ public class HistoricalPricesServiceTest extends ASpringTest {
     String date = "21072021";
     String minute = "10:08";
 
-    HistoricalPricesId historicalPricesId = new HistoricalPricesId(symbol, date, minute);
+    HistoricalPriceId historicalPriceId = new HistoricalPriceId(symbol, date, minute);
 
-    given(this.historicalPricesDbRepo.existsById(historicalPricesId)).willReturn(true);
+    given(this.historicalPriceDbRepo.existsById(historicalPriceId)).willReturn(true);
 
-    assertFalse(historicalPricesService.exists(new HistoricalPricesId(
+    assertFalse(historicalPricesService.exists(new HistoricalPriceId(
         "MSFT",
         "1",
         "1")));

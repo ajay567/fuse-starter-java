@@ -3,9 +3,9 @@ package org.galatea.starter.service;
 import java.util.Optional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.galatea.starter.domain.HistoricalPricesDB;
-import org.galatea.starter.domain.HistoricalPricesId;
-import org.galatea.starter.domain.rpsy.HistoricalPricesDbRepo;
+import org.galatea.starter.domain.HistoricalPrice;
+import org.galatea.starter.domain.HistoricalPriceId;
+import org.galatea.starter.domain.rpsy.HistoricalPriceDbRepo;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,40 +13,40 @@ import org.springframework.stereotype.Service;
 public class HistoricalPricesService {
 
   @NonNull
-  HistoricalPricesDbRepo historicalpricesDbRepo;
+  private HistoricalPriceDbRepo historicalpricesDbRepo;
 
   /**
-   * Get a particular HistoricalPricesDB entity from the database if id matches.
+   * Get a particular HistoricalPrice entity from the database if id matches.
    *
-   * @param historicalPricesId the id for the entity to be returned
-   * @return HistoricalPricesDB objects
+   * @param historicalPriceId the id for the entity to be returned
+   * @return HistoricalPrice objects
    */
-  public Optional<HistoricalPricesDB> getHistoricalPriceFromDb(final HistoricalPricesId
-      historicalPricesId) {
-    return historicalpricesDbRepo.findById(historicalPricesId);
+  public Optional<HistoricalPrice> getHistoricalPriceFromDb(
+      final HistoricalPriceId historicalPriceId) {
+    return historicalpricesDbRepo.findById(historicalPriceId);
   }
 
   /**
-   * Saves a HistoricalPricesDB entity into the database.
+   * Saves a HistoricalPrice entity into the database.
    *
-   * @param historicalPricesDB the entity to be saved
+   * @param historicalPrice the entity to be saved
    */
-  public HistoricalPricesDB saveOrUpdate(final HistoricalPricesDB historicalPricesDB) {
-    historicalpricesDbRepo.save(historicalPricesDB);
+  public HistoricalPrice saveOrUpdate(final HistoricalPrice historicalPrice) {
+    historicalpricesDbRepo.save(historicalPrice);
 
-    return historicalPricesDB;
+    return historicalPrice;
   }
 
   /**
-   * Checks if a HistoricalPricesDB entity exists in the database based on the
-   * HistoricalPricesId.
+   * Checks if a HistoricalPrice entity exists in the database based on the
+   * HistoricalPriceId.
    *
-   * @param historicalPricesId the id to searched in the database
+   * @param historicalPriceId the id to searched in the database
    * @return true or false based on existence
    */
-  public boolean exists(final HistoricalPricesId historicalPricesId) {
+  public boolean exists(final HistoricalPriceId historicalPriceId) {
 
-    return historicalpricesDbRepo.existsById(historicalPricesId);
+    return historicalpricesDbRepo.existsById(historicalPriceId);
   }
 
 }
