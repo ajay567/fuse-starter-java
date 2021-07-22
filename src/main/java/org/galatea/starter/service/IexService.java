@@ -89,13 +89,13 @@ public class IexService {
     } else {
       // Enter data from new api requests into the database.
 
-      List<IexHistoricalPrices> listIexHistoricalPricesApi =
+      List<IexHistoricalPrices> iexHistoricalPricesApi =
           iexHistoricalClient.getHistoricalPricesForSymbols(symbols, range, date);
 
       saveDataFromNewApiRequestsToDatabase(symbols, date, timeToCheckForPreviousRequests,
-          listIexHistoricalPricesApi);
+          iexHistoricalPricesApi);
 
-      return listIexHistoricalPricesApi;
+      return iexHistoricalPricesApi;
     }
 
   }
@@ -125,35 +125,35 @@ public class IexService {
 
     List<String> missingDates = new ArrayList<>();
 
-    List<IexHistoricalPrices> listIexHistoricalPrices = new ArrayList<>();
+    List<IexHistoricalPrices> iexHistoricalPrices = new ArrayList<>();
 
     retrieveInformationFromDatabaseForRange(startDate, endDate, symbols,
-        timeForMinuteWhenQueryIsRange, listIexHistoricalPrices, missingDates);
+        timeForMinuteWhenQueryIsRange, iexHistoricalPrices, missingDates);
 
-    if (listIexHistoricalPrices.isEmpty()) {
+    if (iexHistoricalPrices.isEmpty()) {
 
-      List<IexHistoricalPrices> listIexHistoricalPricesApi =
+      List<IexHistoricalPrices> iexHistoricalPricesApi =
           iexHistoricalClient.getHistoricalPricesForSymbols(symbols,range);
       saveDataFromNewApiRequestsToDatabase(symbols, dateDoesNotMatterWhenQueryIsRange,
-          timeForMinuteWhenQueryIsRange, listIexHistoricalPricesApi);
-      listIexHistoricalPrices.addAll(listIexHistoricalPricesApi);
+          timeForMinuteWhenQueryIsRange, iexHistoricalPricesApi);
+      iexHistoricalPrices.addAll(iexHistoricalPricesApi);
 
     } else {
 
       for (String dates: missingDates) {
 
-        List<IexHistoricalPrices> listIexHistoricalPricesApi =
+        List<IexHistoricalPrices> iexHistoricalPricesApi =
             iexHistoricalClient.getHistoricalPricesForSymbolsChartByDay(symbols,"1m",
                 dates);
 
         saveDataFromNewApiRequestsToDatabase(symbols, dateDoesNotMatterWhenQueryIsRange,
-            timeForMinuteWhenQueryIsRange, listIexHistoricalPricesApi);
-        listIexHistoricalPrices.addAll(listIexHistoricalPricesApi);
+            timeForMinuteWhenQueryIsRange, iexHistoricalPricesApi);
+        iexHistoricalPrices.addAll(iexHistoricalPricesApi);
       }
 
     }
 
-    return listIexHistoricalPrices;
+    return iexHistoricalPrices;
   }
 
   /**
@@ -173,13 +173,13 @@ public class IexService {
    *
    * @param symbols stock symbol for which api call is made
    * @param date date for the historical prices
-   * @param listIexHistoricalPricesApi list which has all the new data from the api calls
+   * @param iexHistoricalPricesApi list which has all the new data from the api calls
    */
   private void saveDataFromNewApiRequestsToDatabase(
       final String symbols, final String date, final String timeForMinuteWhenQueryIsRange,
-      final List<IexHistoricalPrices> listIexHistoricalPricesApi) {
+      final List<IexHistoricalPrices> iexHistoricalPricesApi) {
 
-    for (IexHistoricalPrices iexHistoricalPrices: listIexHistoricalPricesApi) {
+    for (IexHistoricalPrices iexHistoricalPrices: iexHistoricalPricesApi) {
 
       HistoricalPrice historicalPrice = new HistoricalPrice(
           symbols, iexHistoricalPrices.getDate(),
@@ -253,7 +253,7 @@ public class IexService {
   private List<IexHistoricalPrices> retrieveInformationFromDatabaseForDate(final String symbols,
       final String dateFormatted) {
 
-    List<IexHistoricalPrices> listIexHistoricalPrices = new ArrayList<>();
+    List<IexHistoricalPrices> iexHistoricalPrices = new ArrayList<>();
 
     for (LocalTime time = LocalTime.of(9,30);
         time.isBefore(LocalTime.of(16,1));
@@ -265,11 +265,11 @@ public class IexService {
       if (historicalPricesService.exists(historicalPriceId)) {
 
         getIexHistoricalPricesObjectFromDatabase(historicalPriceId,
-            listIexHistoricalPrices);
+            iexHistoricalPrices);
       }
     }
 
-    return listIexHistoricalPrices;
+    return iexHistoricalPrices;
   }
 
   /**
@@ -278,12 +278,12 @@ public class IexService {
    * @param startDate the date to start the loop at
    * @param endDate the date to end the loop at
    * @param symbols the symbol for which data has to be retrieved
-   * @param listIexHistoricalPrices list for IexHistoricalPrices
+   * @param iexHistoricalPrices list for IexHistoricalPrices
    * @param missingDates list for missing dates not present in the database
    */
   private void retrieveInformationFromDatabaseForRange(final LocalDate startDate,
       final LocalDate endDate, final String symbols, final String timeForMinuteWhenQueryIsRange,
-      final List<IexHistoricalPrices> listIexHistoricalPrices,
+      final List<IexHistoricalPrices> iexHistoricalPrices,
       final List<String> missingDates) {
 
     for (LocalDate date = startDate;
@@ -295,7 +295,7 @@ public class IexService {
 
       if (historicalPricesService.exists(historicalPriceId)) {
 
-        getIexHistoricalPricesObjectFromDatabase(historicalPriceId, listIexHistoricalPrices);
+        getIexHistoricalPricesObjectFromDatabase(historicalPriceId, iexHistoricalPrices);
       } else {
         missingDates.add(date.toString().replaceAll("-",""));
       }
@@ -308,26 +308,26 @@ public class IexService {
    * Get HistoricalPrice from the database and add it to the list.
    *
    * @param historicalPriceId object to searched in the database
-   * @param listIexHistoricalPrices list for IexHistoricalPrices
+   * @param iexHistoricalPrices list for IexHistoricalPrices
    */
   private void getIexHistoricalPricesObjectFromDatabase(
       final HistoricalPriceId historicalPriceId,
-      final List<IexHistoricalPrices> listIexHistoricalPrices) {
+      final List<IexHistoricalPrices> iexHistoricalPrices) {
 
-    Optional<HistoricalPrice> listHistoricalPricesDb =
+    Optional<HistoricalPrice> historicalPricesDb =
         historicalPricesService.getHistoricalPriceFromDb(historicalPriceId);
 
-    HistoricalPrice objHistoricalPrice = listHistoricalPricesDb.get();
+    HistoricalPrice historicalPrice = historicalPricesDb.get();
 
-    if (objHistoricalPrice != null) {
+    if (historicalPrice != null) {
       IexHistoricalPrices objIexHistoricalPrices = IexHistoricalPrices.builder()
-          .close(objHistoricalPrice.getClose()).date(objHistoricalPrice.getDate())
-          .high(objHistoricalPrice.getHigh()).low(objHistoricalPrice.getLow())
-          .symbol(objHistoricalPrice.getSymbol()).open(objHistoricalPrice.getOpen())
-          .volume(objHistoricalPrice.getVolume()).minute(objHistoricalPrice.getMinute())
+          .close(historicalPrice.getClose()).date(historicalPrice.getDate())
+          .high(historicalPrice.getHigh()).low(historicalPrice.getLow())
+          .symbol(historicalPrice.getSymbol()).open(historicalPrice.getOpen())
+          .volume(historicalPrice.getVolume()).minute(historicalPrice.getMinute())
           .build();
 
-      listIexHistoricalPrices.add(objIexHistoricalPrices);
+      iexHistoricalPrices.add(objIexHistoricalPrices);
     }
   }
 
