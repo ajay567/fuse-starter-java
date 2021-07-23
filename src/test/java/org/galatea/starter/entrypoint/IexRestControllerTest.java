@@ -86,6 +86,7 @@ public class IexRestControllerTest extends ASpringTest {
         .andExpect(jsonPath("$[0].symbol", is("AAPL")))
         .andExpect(jsonPath("$[0].volume").value(new BigDecimal("46691331")))
         .andExpect(jsonPath("$[0].date", is("2021-06-27")))
+        .andExpect(jsonPath("$[0].minute", is("10:08")))
         .andReturn();
   }
 
@@ -104,6 +105,7 @@ public class IexRestControllerTest extends ASpringTest {
         .andExpect(jsonPath("$[0].symbol", is("IBM")))
         .andExpect(jsonPath("$[0].volume").value(new BigDecimal("46691331")))
         .andExpect(jsonPath("$[0].date", is("2021-06-27")))
+        .andExpect(jsonPath("$[0].minute", is("10:08")))
         .andReturn();
   }
 
@@ -122,6 +124,7 @@ public class IexRestControllerTest extends ASpringTest {
         .andExpect(jsonPath("$[0].symbol", is("MSFT")))
         .andExpect(jsonPath("$[0].volume").value(new BigDecimal("46691331")))
         .andExpect(jsonPath("$[0].date", is("2021-06-27")))
+        .andExpect(jsonPath("$[0].minute", is("10:08")))
         .andReturn();
   }
 

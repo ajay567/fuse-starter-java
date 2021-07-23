@@ -83,12 +83,12 @@ public class IexRestController {
 
   /**
    * Utility method for getHistoricalPrices that helps null and length
-   * checks
+   * checks.
    *
    * @param query a string on which the check will be performed
    * @return boolean value based on the checked result
    */
-  private boolean queryNullLengthCheck(String query){
+  private boolean queryNullLengthCheck(final String query) {
 
     return query == null || query.length() == 0;
   }
