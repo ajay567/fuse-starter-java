@@ -16,44 +16,30 @@ import lombok.Setter;
 @IdClass(HistoricalPriceId.class)
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class HistoricalPrice {
 
   @Id
   @Column
-  @Getter
-  @Setter
   private String symbol;
 
   @Id
   @Column
-  @Getter
-  @Setter
   private String date;
 
   @Id
   @Column
-  @Getter
-  @Setter
   private String minute;
 
-  @Getter
-  @Setter
   private BigDecimal close;
 
-  @Getter
-  @Setter
   private BigDecimal high;
 
-  @Getter
-  @Setter
   private BigDecimal low;
 
-  @Getter
-  @Setter
   private BigDecimal open;
 
-  @Getter
-  @Setter
   private BigDecimal volume;
 
 }

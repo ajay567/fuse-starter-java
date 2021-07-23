@@ -35,7 +35,9 @@ public class IexService {
   @NonNull
   private IexHistoricalClient iexHistoricalClient;
 
-  private final String dateDoesNotMatterWhenQueryIsRange = "NA";
+  // When range is being queried then the date variable has no meaning. Therefore, the string "NA"
+  // helps the function know whether the query is range or date.
+  private static final String DATE_DOES_NOT_MATTER_WHEN_QUERY_IS_RANGE = "NA";
 
 
   /**
@@ -71,7 +73,7 @@ public class IexService {
   public List<IexHistoricalPrices> getHistoricalPricesForSymbols(final String symbols,
       final String range, final String date) {
 
-    String dateFormatted = stringDateFormatter(date);
+    String dateFormatted = formatStringAsDate(date);
 
     if (dateFormatted == null) {
       return Collections.emptyList();
@@ -134,7 +136,7 @@ public class IexService {
 
       List<IexHistoricalPrices> iexHistoricalPricesApi =
           iexHistoricalClient.getHistoricalPricesForSymbols(symbols,range);
-      saveDataFromNewApiRequestsToDatabase(symbols, dateDoesNotMatterWhenQueryIsRange,
+      saveDataFromNewApiRequestsToDatabase(symbols, DATE_DOES_NOT_MATTER_WHEN_QUERY_IS_RANGE,
           timeForMinuteWhenQueryIsRange, iexHistoricalPricesApi);
       iexHistoricalPrices.addAll(iexHistoricalPricesApi);
 
@@ -146,7 +148,7 @@ public class IexService {
             iexHistoricalClient.getHistoricalPricesForSymbolsChartByDay(symbols,"1m",
                 dates);
 
-        saveDataFromNewApiRequestsToDatabase(symbols, dateDoesNotMatterWhenQueryIsRange,
+        saveDataFromNewApiRequestsToDatabase(symbols, DATE_DOES_NOT_MATTER_WHEN_QUERY_IS_RANGE,
             timeForMinuteWhenQueryIsRange, iexHistoricalPricesApi);
         iexHistoricalPrices.addAll(iexHistoricalPricesApi);
       }
@@ -196,7 +198,7 @@ public class IexService {
       final String timeForMinuteWhenQueryIsRange,
       final IexHistoricalPrices iexHistoricalPrices) {
 
-    return date.equals(dateDoesNotMatterWhenQueryIsRange) ? timeForMinuteWhenQueryIsRange :
+    return date.equals(DATE_DOES_NOT_MATTER_WHEN_QUERY_IS_RANGE) ? timeForMinuteWhenQueryIsRange :
         iexHistoricalPrices.getMinute();
   }
 
@@ -232,7 +234,7 @@ public class IexService {
    * @param date value to be formatted
    * @return correctly formatted date as string
    */
-  private String stringDateFormatter(final String date) {
+  private String formatStringAsDate(final String date) {
 
     try {
       return (new SimpleDateFormat("yyyy-MM-dd"))
